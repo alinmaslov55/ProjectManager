@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectManager.DAL\ProjectManager.DAL.csproj" />
+    <ProjectReference Include="..\ProjectManager.Models\ProjectManager.Models.csproj" />
+  </ItemGroup>
+
+</Project>
