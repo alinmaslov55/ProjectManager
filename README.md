@@ -13,3 +13,9 @@
 
 - Added Identity Framework
 - Now Users can register, login, logout
+
+## Part 3 Delivery
+
+- Added CRUD Operation for Project
+- Details, Index, Create, Edit, Delete Pages
+- Added ProjectService To work on UnitOfWork
