@@ -9,5 +9,6 @@ namespace ProjectManager.DAL.Repositories.IRepositories
 {
     public interface IProjectRepository: IRepository<Project>
     {
+        Task<Project?> GetProjectWithTasksAsync(int projectId);
     }
 }

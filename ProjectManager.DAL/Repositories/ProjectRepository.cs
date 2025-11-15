@@ -15,5 +15,11 @@ namespace ProjectManager.DAL.Repositories
         public ProjectRepository(DbContext context) : base(context)
         {
         }
+        public async Task<Project?> GetProjectWithTasksAsync(int projectId)
+        {
+            return await AppContext.Projects
+                .Include(p => p.Tasks)
+                .FirstOrDefaultAsync(p => p.Id == projectId);
+        }
     }
 }

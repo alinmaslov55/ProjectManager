@@ -11,7 +11,9 @@ namespace ProjectManager.Models
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public int Status { get; set; } // to be changed to enum later
+        public AppTaskStatus Status { get; set; }
+        public DateTime DueDate { get; set; }
+
 
         // Foreign Key
         public int ProjectId { get; set; }

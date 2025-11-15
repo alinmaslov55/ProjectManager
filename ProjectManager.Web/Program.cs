@@ -2,7 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Repositories;
 using ProjectManager.DAL.Repositories.IRepositories;
-using ProjectManager.BLL;
+using ProjectManager.BLL.Interfaces;
+using ProjectManager.BLL.Services;
 using ProjectManager.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,6 +25,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 // not needed anymore with UnitOfWork
 // builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
