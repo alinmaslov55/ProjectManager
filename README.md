@@ -8,3 +8,8 @@
   2. AppTask
 - Implemented RepositoryPattern (UnitOfwork)
 - Added DataBase Connection
+
+## Part 2 Delivery
+
+- Added Identity Framework
+- Now Users can register, login, logout
