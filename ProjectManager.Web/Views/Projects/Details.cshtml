@@ -27,6 +27,11 @@
                 <td>@task.Status</td>
                 <td>@task.DueDate.ToShortDateString()</td>
                 <td>
+                    <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <form asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.Id" method="post" style="display:inline">
+                        <input type="hidden" name="projectId" value="@Model.Project.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
                 </td>
             </tr>
         }
@@ -35,5 +40,6 @@
 
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-warning">Edit Project</a>
+    <a asp-controller="Tasks" asp-action="Create" asp-route-projectId="@Model.Project.Id" class="btn btn-primary mb-3">Add Task</a>
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
