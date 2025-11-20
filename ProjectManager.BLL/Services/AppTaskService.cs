@@ -79,5 +79,23 @@ namespace ProjectManager.BLL.Services
             return true;
 
         }
+
+        public async Task<bool> UpdateTaskStatusAsync(int taskId, AppTaskStatus newStatus, string userId)
+        {
+            var task = await _unitOfWork.Tasks.GetAsync(taskId);
+            if (task == null)
+            {
+                return false;
+            }
+
+            if(!await _projectService.IsUserOwnerAsync(task.ProjectId, userId))
+            {
+                return false;
+            }
+
+            task.Status = newStatus;
+            await _unitOfWork.CompleteAsync();
+            return true;
+        }
     }
 }

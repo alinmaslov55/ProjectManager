@@ -1,45 +1,170 @@
-﻿@using ProjectManager.Web.ViewModels
-@model ProjectDetailsViewModel
+﻿@using ProjectManager.Models
+@model ProjectManager.Web.ViewModels.ProjectDetailsViewModel
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+<style>
+    .kanban-column {
+        min-height: 200px;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .task-card {
+        background-color: white;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        cursor: move; /* Indicates draggable */
+    }
+
+    .task-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        border-top: 1px solid #eee;
+        padding-top: 5px;
+    }
+</style>
 
 @{
     ViewData["Title"] = "Project Details";
 }
 
-<h2>@Model.Project.Title</h2>
-<p>@Model.Project.Description</p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>@Model.Project.Title</h2>
+    <a asp-controller="Tasks" asp-action="Create" asp-route-projectId="@Model.Project.Id" class="btn btn-primary">
+        + Add New Task
+    </a>
+</div>
 
-<hr/>
+<p class="text-muted">@Model.Project.Description</p>
+<hr />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Due Date</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var task in Model.Tasks)
-        {
-            <tr>
-                <td>@task.Title</td>
-                <td>@task.Status</td>
-                <td>@task.DueDate.ToShortDateString()</td>
-                <td>
-                    <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <form asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.Id" method="post" style="display:inline">
-                        <input type="hidden" name="projectId" value="@Model.Project.Id" />
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-md-4">
+        <h4 class="text-center bg-secondary text-white p-2 rounded">To Do</h4>
+        <div id="todo-list" class="kanban-column" data-status="0">
+            @foreach (var task in Model.Tasks.Where(t => t.Status == AppTaskStatus.ToDo))
+            {
+                <div class="task-card" data-id="@task.Id">
+                    <strong>@task.Title</strong>
+                    <p class="small text-muted mb-1">Due: @task.DueDate.ToShortDateString()</p>
+
+                    <div class="task-actions">
+                        <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem">Edit</a>
+
+                        <form asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.Id" method="post" style="display:inline;">
+                            <input type="hidden" name="projectId" value="@Model.Project.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem" onclick="return confirm('Are you sure?')">Del</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h4 class="text-center bg-primary text-white p-2 rounded">In Progress</h4>
+        <div id="inprogress-list" class="kanban-column" data-status="1">
+            @foreach (var task in Model.Tasks.Where(t => t.Status == AppTaskStatus.InProgress))
+            {
+                <div class="task-card" data-id="@task.Id">
+                    <strong>@task.Title</strong>
+                    <p class="small text-muted mb-1">Due: @task.DueDate.ToShortDateString()</p>
+
+                    <div class="task-actions">
+                        <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem">Edit</a>
+
+                        <form asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.Id" method="post" style="display:inline;">
+                            <input type="hidden" name="projectId" value="@Model.Project.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem" onclick="return confirm('Are you sure?')">Del</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h4 class="text-center bg-success text-white p-2 rounded">Done</h4>
+        <div id="done-list" class="kanban-column" data-status="2">
+            @foreach (var task in Model.Tasks.Where(t => t.Status == AppTaskStatus.Done))
+            {
+                <div class="task-card" data-id="@task.Id">
+                    <strong>@task.Title</strong>
+                    <p class="small text-muted mb-1">Due: @task.DueDate.ToShortDateString()</p>
+
+                    <div class="task-actions">
+                        <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem">Edit</a>
+
+                        <form asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.Id" method="post" style="display:inline;">
+                            <input type="hidden" name="projectId" value="@Model.Project.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem" onclick="return confirm('Are you sure?')">Del</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-warning">Edit Project</a>
-    <a asp-controller="Tasks" asp-action="Create" asp-route-projectId="@Model.Project.Id" class="btn btn-primary mb-3">Add Task</a>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    <br />
+    <a asp-action="Index" class="btn btn-secondary">Back to Project List</a>
 </div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+        const columns = [
+            document.getElementById('todo-list'),
+            document.getElementById('inprogress-list'),
+            document.getElementById('done-list')
+        ];
+
+        columns.forEach(col => {
+            if (col) {
+                new Sortable(col, {
+                    group: 'kanban',
+                    animation: 150,
+                    onEnd: function (evt) {
+                        const itemEl = evt.item;
+                        const newStatus = evt.to.getAttribute('data-status');
+                        const taskId = itemEl.getAttribute('data-id');
+
+                        if (evt.from !== evt.to) {
+                            updateTaskStatus(taskId, newStatus);
+                        }
+                    }
+                });
+            }
+        });
+
+        function updateTaskStatus(taskId, statusValue) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            fetch('/Tasks/UpdateStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({
+                    taskId: parseInt(taskId),
+                    newStatus: parseInt(statusValue)
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    alert("Failed to update status. Moving back...");
+                    location.reload();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+}

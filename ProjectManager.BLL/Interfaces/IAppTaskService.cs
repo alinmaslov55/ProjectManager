@@ -13,5 +13,6 @@ namespace ProjectManager.BLL.Interfaces
         Task<bool> CreateTaskAsync(AppTask task, string userId);
         Task<bool> UpdateTaskAsync(AppTask task, string userId);
         Task<bool> DeleteTaskAsync(int taskId, string userId);
+        Task<bool> UpdateTaskStatusAsync(int taskId, AppTaskStatus newStatus, string userId);
     }
 }

@@ -102,5 +102,31 @@ namespace ProjectManager.Web.Controllers
 
             return RedirectToAction("Details", "Projects", new { id = projectId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus([FromBody] TaskStatusUpdateModel data)
+        {
+            if(data == null)
+            {
+                return BadRequest();
+            }
+
+            var statusEnum = (ProjectManager.Models.AppTaskStatus)data.NewStatus;
+
+            var success = await _taskService.UpdateTaskStatusAsync(data.TaskId, statusEnum, GetUserId());
+        
+            if(!success)
+            {
+                return Forbid();
+            }
+
+            return Ok(new {success = true});
+        }
+
+    }
+    public class TaskStatusUpdateModel
+    {
+        public int TaskId { get; set; }
+        public int NewStatus { get; set; }
     }
 }
