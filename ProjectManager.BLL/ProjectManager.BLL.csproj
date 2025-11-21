@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ProjectManager.DAL\ProjectManager.DAL.csproj" />
     <ProjectReference Include="..\ProjectManager.Models\ProjectManager.Models.csproj" />
   </ItemGroup>

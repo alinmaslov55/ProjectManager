@@ -21,5 +21,7 @@ namespace ProjectManager.Web.ViewModels
 
         [Required]
         public AppTaskStatus Status { get; set; }
+
+        public IEnumerable<Attachment> Attachments { get; set; } = new List<Attachment>();
     }
 }

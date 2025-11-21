@@ -1,27 +1,97 @@
-﻿@model ProjectManager.Web.ViewModels.TaskFormViewModel;
-@using ProjectManager.Models;
+﻿@model ProjectManager.Web.ViewModels.TaskFormViewModel
+@using ProjectManager.Models
 
+@{
+    ViewData["Title"] = "Edit Task";
+}
+
+<h2>Edit Task</h2>
 <hr />
-<form asp-action="Edit">
-    <input type="hidden" asp-for="ProjectId" />
 
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ProjectId" />
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DueDate" class="form-label"></label>
+                <input asp-for="DueDate" class="form-control" type="date" />
+                <span asp-validation-for="DueDate" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<AppTaskStatus>()"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-secondary">Back to Board</a>
+            </div>
+        </form>
     </div>
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <hr />
+        <h3>Attachments</h3>
+
+        @if (Model.Attachments != null && Model.Attachments.Any())
+        {
+            <ul class="list-group mb-3">
+                @foreach (var file in Model.Attachments)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="@file.FilePath" target="_blank">@file.FileName</a>
+
+                        <form asp-action="DeleteAttachment" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@file.Id" />
+                            <input type="hidden" name="taskId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this file?')">X</button>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">No attachments found.</p>
+        }
+
+        <form asp-action="UploadAttachment" method="post" enctype="multipart/form-data" class="card p-3 bg-light">
+            <div class="form-group">
+                <label class="form-label"><strong>Upload new file:</strong></label>
+
+                <input type="hidden" name="taskId" value="@Model.Id" />
+
+                <div class="input-group">
+                    <input type="file" name="file" class="form-control" required />
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="mb-3">
-        <label asp-for="DueDate" class="form-label"></label>
-        <input asp-for="DueDate" class="form-control" type="date" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Status" class="form-label"></label>
-        <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<AppTaskStatus>()"></select>
-    </div>
-    <button type="submit" class="btn btn-primary">Edit</button>
-    <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

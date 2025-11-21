@@ -10,6 +10,7 @@ namespace ProjectManager.DAL.Repositories.IRepositories
     {
         IProjectRepository Projects { get; }
         IAppTaskRepository Tasks { get; }
+        IAttachmentRepository Attachments { get; }
         Task<int> CompleteAsync(); // This will call SaveChangesAsync()
     }
 }

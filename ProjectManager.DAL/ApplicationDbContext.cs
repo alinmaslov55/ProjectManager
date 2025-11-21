@@ -16,6 +16,7 @@ namespace ProjectManager.DAL
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<AppTask> Tasks { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

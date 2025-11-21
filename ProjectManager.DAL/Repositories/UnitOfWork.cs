@@ -13,12 +13,15 @@ namespace ProjectManager.DAL.Repositories
         public IProjectRepository Projects { get; private set; }
 
         public IAppTaskRepository Tasks { get; private set; }
-        
+
+        public IAttachmentRepository Attachments { get; private set; }
+
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Projects = new ProjectRepository(_context);
             Tasks = new AppTaskRepository(_context);
+            Attachments = new AttachmentRepository(_context);
         }
         public async Task<int> CompleteAsync()
         {

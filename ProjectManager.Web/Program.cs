@@ -27,6 +27,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IAppTaskService, AppTaskService>();
+builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 
 // not needed anymore with UnitOfWork
 // builder.Services.AddScoped<IProjectRepository, ProjectRepository>();

@@ -14,6 +14,7 @@ namespace ProjectManager.Models
         public AppTaskStatus Status { get; set; }
         public DateTime DueDate { get; set; }
 
+        public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
 
         // Foreign Key
         public int ProjectId { get; set; }

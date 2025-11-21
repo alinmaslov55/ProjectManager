@@ -12,10 +12,17 @@ namespace ProjectManager.Web.Controllers
     public class TasksController : Controller
     {
         private readonly IAppTaskService _taskService;
+        private readonly IAttachmentService _attachmentService;
+        private readonly IWebHostEnvironment _environment;
 
-        public TasksController(IAppTaskService taskService)
+        public TasksController(
+            IAppTaskService taskService,
+            IAttachmentService attachmentService,
+            IWebHostEnvironment environment)
         {
             _taskService = taskService;
+            _attachmentService = attachmentService;
+            _environment = environment;
         }
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -56,6 +63,9 @@ namespace ProjectManager.Web.Controllers
         {
             var task = await _taskService.GetTaskByIdAsync(id);
             if (task == null) return NotFound();
+
+            var attachments =  await _attachmentService.GetAttachmentsForTaskAsync(id);
+
             var model = new TaskFormViewModel
             {
                 Id = task.Id,
@@ -63,7 +73,8 @@ namespace ProjectManager.Web.Controllers
                 Title = task.Title,
                 Description = task.Description,
                 DueDate = task.DueDate,
-                Status = task.Status
+                Status = task.Status,
+                Attachments = attachments
             };
             return View(model);
         }
@@ -106,7 +117,7 @@ namespace ProjectManager.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateStatus([FromBody] TaskStatusUpdateModel data)
         {
-            if(data == null)
+            if (data == null)
             {
                 return BadRequest();
             }
@@ -114,15 +125,36 @@ namespace ProjectManager.Web.Controllers
             var statusEnum = (ProjectManager.Models.AppTaskStatus)data.NewStatus;
 
             var success = await _taskService.UpdateTaskStatusAsync(data.TaskId, statusEnum, GetUserId());
-        
-            if(!success)
+
+            if (!success)
             {
                 return Forbid();
             }
 
-            return Ok(new {success = true});
+            return Ok(new { success = true });
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> UploadAttachment(int taskId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                await _attachmentService.UploadFileAsync(file, taskId, GetUserId(), _environment.WebRootPath);
+            }
+
+            return RedirectToAction("Edit", new { id = taskId } );
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteAttachment(int id, int taskId)
+        {
+            await _attachmentService.DeleteAttachmentAsync(
+                id,
+                GetUserId(),
+                 _environment.WebRootPath
+                 );
+            return RedirectToAction("Edit", new { id = taskId });
+        }
     }
     public class TaskStatusUpdateModel
     {
