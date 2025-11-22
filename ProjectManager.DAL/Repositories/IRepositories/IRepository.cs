@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories.IRepositories
 {
-    public interface IRepository<T> where T : class
+    public interface ICommentRepository<T> where T : class
     {
         Task<T?> GetAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();

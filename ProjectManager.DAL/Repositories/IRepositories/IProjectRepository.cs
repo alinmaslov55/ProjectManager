@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories.IRepositories
 {
-    public interface IProjectRepository: IRepository<Project>
+    public interface IProjectRepository: ICommentRepository<Project>
     {
         Task<Project?> GetProjectWithTasksAsync(int projectId);
     }

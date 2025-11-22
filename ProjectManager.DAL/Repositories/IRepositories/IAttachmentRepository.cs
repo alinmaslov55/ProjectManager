@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories.IRepositories
 {
-    public interface IAttachmentRepository: IRepository<Attachment>
+    public interface IAttachmentRepository: ICommentRepository<Attachment>
     {
     }
 }

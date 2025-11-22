@@ -8,6 +8,7 @@
 <h2>Edit Task</h2>
 <hr />
 
+<!-- SECTION 1: EDIT TASK FORM -->
 <div class="row">
     <div class="col-md-8">
         <form asp-action="Edit">
@@ -36,6 +37,8 @@
 
             <div class="mb-3">
                 <label asp-for="Status" class="form-label"></label>
+                <!-- Objective Note: I kept AppTaskStatus based on your previous code.
+                     Ensure your Enum name in Models matches this exactly. -->
                 <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<AppTaskStatus>()"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
@@ -48,6 +51,7 @@
     </div>
 </div>
 
+<!-- SECTION 2: ATTACHMENTS -->
 <div class="row mt-4">
     <div class="col-md-8">
         <hr />
@@ -75,16 +79,57 @@
             <p class="text-muted">No attachments found.</p>
         }
 
+        <!-- Upload Form -->
         <form asp-action="UploadAttachment" method="post" enctype="multipart/form-data" class="card p-3 bg-light">
             <div class="form-group">
                 <label class="form-label"><strong>Upload new file:</strong></label>
-
                 <input type="hidden" name="taskId" value="@Model.Id" />
 
                 <div class="input-group">
                     <input type="file" name="file" class="form-control" required />
                     <button type="submit" class="btn btn-success">Upload</button>
                 </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- SECTION 3: COMMENTS -->
+<div class="row mt-4 mb-5">
+    <div class="col-md-8">
+        <hr />
+        <h3>Comments</h3>
+
+        <div class="mb-4">
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body p-2">
+                            <p class="mb-1">@comment.Content</p>
+                            <small class="text-muted">
+                                <!-- Note: User might be null if not Eager Loaded correctly.
+                                     Using Null Conditional ?. operator prevents crashing. -->
+                                - <strong>@(comment.User?.UserName ?? "Unknown")</strong>
+                                on @comment.CreatedDate.ToLocalTime()
+                            </small>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">No comments yet.</p>
+            }
+        </div>
+
+        <!-- Add Comment Form -->
+        <form asp-action="AddComment" method="post">
+            <input type="hidden" name="taskId" value="@Model.Id" />
+            <div class="input-group">
+                <input name="content" class="form-control" placeholder="Write a comment..." required autocomplete="off" />
+                <button type="submit" class="btn btn-primary">Post Comment</button>
             </div>
         </form>
     </div>

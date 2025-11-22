@@ -13,16 +13,19 @@ namespace ProjectManager.Web.Controllers
     {
         private readonly IAppTaskService _taskService;
         private readonly IAttachmentService _attachmentService;
+        private readonly ICommentService _commentService;
         private readonly IWebHostEnvironment _environment;
 
         public TasksController(
             IAppTaskService taskService,
             IAttachmentService attachmentService,
+            ICommentService commentService,
             IWebHostEnvironment environment)
         {
             _taskService = taskService;
             _attachmentService = attachmentService;
             _environment = environment;
+            _commentService = commentService;
         }
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -154,6 +157,16 @@ namespace ProjectManager.Web.Controllers
                  _environment.WebRootPath
                  );
             return RedirectToAction("Edit", new { id = taskId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddComment(int taskId, string content)
+        {
+            if (!string.IsNullOrEmpty(content))
+            {
+                await _commentService.AddCommentAsync(taskId, content, GetUserId());
+            }
+            return RedirectToAction(nameof(Edit), new { id = taskId });
         }
     }
     public class TaskStatusUpdateModel

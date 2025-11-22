@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : ICommentRepository<T> where T : class
     {
         protected readonly DbContext Context;
 

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories.IRepositories
 {
-    public interface IAppTaskRepository: ICommentRepository<AppTask>
+    public interface ICommentRepository: ICommentRepository<Comment>
     {
+        Task<IEnumerable<Comment>> GetCommentsWithUserAsync(int taskId);
     }
 }

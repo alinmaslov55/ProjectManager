@@ -17,6 +17,7 @@ namespace ProjectManager.DAL
         public DbSet<Project> Projects { get; set; }
         public DbSet<AppTask> Tasks { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,12 @@ namespace ProjectManager.DAL
                 .HasOne(t => t.Project)
                 .WithMany(p => p.Tasks)
                 .HasForeignKey(t => t.ProjectId);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -23,5 +23,6 @@ namespace ProjectManager.Web.ViewModels
         public AppTaskStatus Status { get; set; }
 
         public IEnumerable<Attachment> Attachments { get; set; } = new List<Attachment>();
+        public IEnumerable<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

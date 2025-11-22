@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectManager.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace ProjectManager.DAL.Repositories.IRepositories
         IProjectRepository Projects { get; }
         IAppTaskRepository Tasks { get; }
         IAttachmentRepository Attachments { get; }
+        ICommentRepository Comments { get; }
         Task<int> CompleteAsync(); // This will call SaveChangesAsync()
     }
 }

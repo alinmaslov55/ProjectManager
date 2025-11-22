@@ -1,4 +1,5 @@
 ﻿using ProjectManager.DAL.Repositories.IRepositories;
+using ProjectManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,16 @@ namespace ProjectManager.DAL.Repositories
 
         public IAttachmentRepository Attachments { get; private set; }
 
+        public ICommentRepository Comments { get; private set; }
+
+        
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Projects = new ProjectRepository(_context);
             Tasks = new AppTaskRepository(_context);
             Attachments = new AttachmentRepository(_context);
+            Comments = new CommentRepository(_context);
         }
         public async Task<int> CompleteAsync()
         {

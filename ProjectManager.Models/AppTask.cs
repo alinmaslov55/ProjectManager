@@ -15,6 +15,7 @@ namespace ProjectManager.Models
         public DateTime DueDate { get; set; }
 
         public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
+        public virtual ICollection<Comment> Comments { get; set; }
 
         // Foreign Key
         public int ProjectId { get; set; }
