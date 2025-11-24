@@ -1,0 +1,20 @@
+﻿@model IEnumerable<ProjectManager.Models.Notification>
+<h2>Notifications</h2>
+<hr />
+<div class="list-group">
+    @foreach (var item in Model)
+    {
+        <div class="list-group-item @(item.IsRead ? "bg-light" : "fw-bold")">
+            <div class="d-flex w-100 justify-content-between">
+                <small>@item.CreatedDate.ToLocalTime()</small>
+                @if (!item.IsRead)
+                {
+                    <form asp-action="MarkAsRead" asp-route-id="@item.Id" method="post">
+                        <button type="submit" class="btn btn-xs btn-link">Mark Read</button>
+                    </form>
+                }
+            </div>
+            <p class="mb-1">@item.Message</p>
+        </div>
+    }
+</div>

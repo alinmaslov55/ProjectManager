@@ -14,11 +14,15 @@ namespace ProjectManager.BLL.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProjectService _projectService;
 
+        private readonly IEnumerable<INotifier> _notifiers;
 
-        public AppTaskService(IUnitOfWork unitOfWork, IProjectService projectService)
+        public AppTaskService(IUnitOfWork unitOfWork,
+            IProjectService projectService,
+            IEnumerable<INotifier> notifiers)
         {
             _unitOfWork = unitOfWork;
             _projectService = projectService;
+            _notifiers = notifiers;
         }
         public async Task<bool> CreateTaskAsync(AppTask task, string userId)
         {
@@ -95,6 +99,15 @@ namespace ProjectManager.BLL.Services
 
             task.Status = newStatus;
             await _unitOfWork.CompleteAsync();
+
+            if(newStatus == Models.AppTaskStatus.Done)
+            {
+                foreach(var notifier in _notifiers)
+                {
+                    await notifier.NotifyTaskCompletedAsync(task, userId);
+                }
+            }
+
             return true;
         }
     }
